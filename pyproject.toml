@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "dakko-sdk"
+version = "0.1.0"
+description = "Dakko Python SDK"
+authors = ["Dakko <info@dakko.ai>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "dakko"}]
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+httpx = "^0.27.0"
+pydantic = "^2.8.2"
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+
+[tool.poetry-dynamic-versioning.files."dakko/__version__.py"]
+persistent-substitution = true
+initial-content = """
+  # These version placeholders will be replaced later during substitution.
+  __version__ = "0.0.0"
+  __version_tuple__ = (0, 0, 0)
+"""
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
