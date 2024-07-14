@@ -16,6 +16,21 @@ Using poetry:
 poetry add git+https://github.com/dakko-group/dakko-sdk.git
 ```
 
+## Upgrading
+
+Using pip:
+
+```bash
+pip uninstall dakko-sdk
+pip install git+https://github.com/dakko-group/dakko-sdk.git
+```
+
+Using poetry:
+
+```bash
+poetry update dakko-sdk
+```
+
 ## Usage
 
 ```python
