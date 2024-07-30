@@ -15,7 +15,7 @@ class Exchange(ExtendedEnum):
     cbse = "coinbase"
     huob = "huobi"
     okex = "okx"
-    mexc = "mex"
+    mexc = "mexc"
 
 
 # ....................... #
@@ -40,6 +40,8 @@ class BaseAsset(ExtendedEnum):
 
 class QuoteAsset(ExtendedEnum):
     usdt = "usdt"
+    usd = "usd"
+    usdc = "usdc"
 
 
 # ----------------------- #
