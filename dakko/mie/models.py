@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import Field
 
@@ -60,6 +60,8 @@ class MieRequest(BaseModelEnum):
     quote: QuoteAsset = Field(
         description="Quote asset to trade against", default=QuoteAsset.usdt
     )
+    ts: Optional[int] = Field(description="Timestamp for estimation", default=None)
+    isodate: Optional[str] = Field(description="Datetime (ISO format)", default=None)
 
 
 # ....................... #
@@ -80,6 +82,8 @@ class MieRequestRaw(BaseModelEnum):
     quote: QuoteAsset = Field(
         description="Quote asset to trade against", default=QuoteAsset.usdt
     )
+    ts: Optional[int] = Field(description="Timestamp for estimation", default=None)
+    isodate: Optional[str] = Field(description="Datetime (ISO format)", default=None)
 
 
 # ....................... #
@@ -98,6 +102,8 @@ class MieRequestMultiple(BaseModelEnum):
     quote: QuoteAsset = Field(
         description="Quote asset to trade against", default=QuoteAsset.usdt
     )
+    ts: Optional[int] = Field(description="Timestamp for estimation", default=None)
+    isodate: Optional[str] = Field(description="Datetime (ISO format)", default=None)
 
 
 # ....................... #
@@ -118,6 +124,8 @@ class MieRequestRawMultiple(BaseModelEnum):
     quote: QuoteAsset = Field(
         description="Quote asset to trade against", default=QuoteAsset.usdt
     )
+    ts: Optional[int] = Field(description="Timestamp for estimation", default=None)
+    isodate: Optional[str] = Field(description="Datetime (ISO format)", default=None)
 
 
 # ....................... #
@@ -131,6 +139,8 @@ class MieResponse(BaseModelEnum):
     optimal_size: float = Field(description="Optimal trade size")
     current_price: float = Field(description="Current price of the base asset")
     estimated_slippage: float = Field(description="Estimated slippage in basis points")
+    ts: Optional[int | float] = Field(description="Timestamp", default=None)
+    isodate: Optional[str] = Field(description="Datetime (ISO format)", default=None)
 
 
 # ....................... #
@@ -153,3 +163,5 @@ class MieResponseRaw(BaseModelEnum):
     raw: List[MieResponseRawEntry] = Field(
         description="Estimated slippage across trade sizes"
     )
+    ts: Optional[int | float] = Field(description="Timestamp", default=None)
+    isodate: Optional[str] = Field(description="Datetime (ISO format)", default=None)

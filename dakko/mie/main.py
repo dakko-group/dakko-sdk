@@ -21,17 +21,17 @@ class MarketImpactEstimation:
 
     # ....................... #
 
-    def __init__(self, version: str = "v0"):
+    def __init__(self, version: str = "v0") -> None:
         self.version = version
 
     # ....................... #
 
-    def auth(self, token: str):
+    def auth(self, token: str) -> None:
         self.__auth_token = token
 
     # ....................... #
 
-    def _get_headers(self):
+    def _get_headers(self) -> Dict[str, str]:
         headers = {"Content-Type": "application/json"}
 
         if self.__auth_token:
@@ -41,12 +41,13 @@ class MarketImpactEstimation:
 
     # ....................... #
 
-    def _post(self, endpoint: str, data: dict) -> dict:
+    def _post(self, endpoint: str, data: Dict[str, Any]) -> Any:
         url = f"{self.__api_host}/{self.version}/{endpoint}"
 
-        with httpx.Client() as client:
+        with httpx.Client() as client:  # check concurrent requests
             response = client.post(url, headers=self._get_headers(), json=data)
             response.raise_for_status()
+
             return response.json()
 
     # ....................... #
@@ -59,7 +60,25 @@ class MarketImpactEstimation:
         trade_size: float = 10000,
         is_sell: bool = True,
         max_abs_slippage_bps: float = 1,
+        ts: Optional[int] = None,
+        isodate: Optional[str] = None,
     ) -> Dict[str, Any] | List[Dict[str, Any]]:
+        """Get the optimal trade size for given exchange(s).
+
+        Args:
+            exchange (Exchange | List[Exchange]): Exchange(s) to estimate slippage for
+            base_asset (BaseAsset): Base asset to trade
+            quote_asset (QuoteAsset, optional): Quote asset to trade against. Defaults to QuoteAsset.usdt.
+            trade_size (float, optional): Initial size of the trade. Defaults to 10000.
+            is_sell (bool, optional): Whether to sell the base asset. Defaults to True.
+            max_abs_slippage_bps (float, optional): Maximum allowed slippage in basis points. Defaults to 1.
+            ts (Optional[int], optional): Timestamp for estimation. Defaults to None.
+            isodate (Optional[str], optional): Datetime (ISO format). Defaults to None.
+
+        Returns:
+            res (Dict[str, Any] | List[Dict[str, Any]]): Optimal trade size for the given exchange(s)
+        """
+
         if isinstance(exchange, list):
             request = MieRequestMultiple(
                 exchange=exchange,
@@ -68,6 +87,8 @@ class MarketImpactEstimation:
                 sell=is_sell,
                 max_abs_slippage_bps=max_abs_slippage_bps,
                 quote=quote_asset,
+                ts=ts,
+                isodate=isodate,
             )
             return self._post("optimal/multiple", request.model_dump())
 
@@ -79,6 +100,8 @@ class MarketImpactEstimation:
                 sell=is_sell,
                 max_abs_slippage_bps=max_abs_slippage_bps,
                 quote=quote_asset,
+                ts=ts,
+                isodate=isodate,
             )
             return self._post("optimal/single", request.model_dump())
 
@@ -92,7 +115,25 @@ class MarketImpactEstimation:
         trade_size: float = 10000,
         is_sell: bool = True,
         steps: int = 10,
+        ts: Optional[int] = None,
+        isodate: Optional[str] = None,
     ) -> Dict[str, Any] | List[Dict[str, Any]]:
+        """Estimate slippage across trade sizes for given exchange(s).
+
+        Args:
+            exchange (Exchange | List[Exchange]): Exchange(s) to estimate slippage for
+            base_asset (BaseAsset): Base asset to trade
+            quote_asset (QuoteAsset, optional): Quote asset to trade against. Defaults to QuoteAsset.usdt.
+            trade_size (float, optional): Initial size of the trade. Defaults to 10000.
+            is_sell (bool, optional): Whether to sell the base asset. Defaults to True.
+            steps (int, optional): Number of steps to estimate slippage across sizes. Defaults to 10.
+            ts (Optional[int], optional): Timestamp for estimation. Defaults to None.
+            isodate (Optional[str], optional): Datetime (ISO format). Defaults to None.
+
+        Returns:
+            res (Dict[str, Any] | List[Dict[str, Any]]): Estimated slippage across trade sizes for the given exchange(s)
+        """
+
         if isinstance(exchange, list):
             request = MieRequestRawMultiple(
                 exchange=exchange,
@@ -101,6 +142,8 @@ class MarketImpactEstimation:
                 sell=is_sell,
                 steps=steps,
                 quote=quote_asset,
+                ts=ts,
+                isodate=isodate,
             )
             return self._post("raw/multiple", request.model_dump())
 
@@ -112,5 +155,7 @@ class MarketImpactEstimation:
                 sell=is_sell,
                 steps=steps,
                 quote=quote_asset,
+                ts=ts,
+                isodate=isodate,
             )
             return self._post("raw/single", request.model_dump())
