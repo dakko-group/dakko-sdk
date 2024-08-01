@@ -57,7 +57,7 @@ mie.get_optimal_trade_size(
 )
 ```
 
-The MIE supports slippage estimation across different trade sizes. In this case using `steps` argument we build linear space with `start = 1000` and `end = trade_size` points to build 2D distribution of slippage vs trade size:
+The MIE supports slippage estimation across different trade sizes. In this case using `steps` argument we build linear space with `start = 1000 USD` and `end = trade_size USD` points to build 2D distribution of slippage vs trade size:
 
 ```python
 mie.estimate_slippage_across_sizes(
