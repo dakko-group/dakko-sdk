@@ -1,6 +1,36 @@
 # Dakko Python SDK
 
 Dakko Python SDK is a Python library for interacting with the Dakko Services.
+Supported exchanges:
+
+- Coinbase (only "Exchange Domestic");
+- Kraken;
+- MEXC;
+- Bitfinex;
+- Bybit;
+- OKX;
+- Binance;
+- Huobi.
+
+Supported base assets:
+
+- SOL;
+- ETH;
+- BTC;
+- DOT;
+- ADA;
+- XRP;
+- BCH;
+- LINK;
+- MATIC;
+- LTC;
+- AVAX.
+
+Supported quote assets:
+
+- USDT;
+- USD;
+- USDC.
 
 ## Installation
 
