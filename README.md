@@ -136,6 +136,16 @@ mie.estimate_slippage_across_sizes(
 )
 ```
 
+### Improved version of the model
+
+To use next version of the model, choose a version during initialization:
+
+```python
+mie = MarketImpactEstimation(version="v1")
+```
+
+We gonna add support for wider versioning and model metrics access (based on benchmarks over historical data) to enhance results and user experience.
+
 ### Help
 
 To get method description you always can use `help` function. For example:

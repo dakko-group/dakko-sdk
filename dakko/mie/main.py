@@ -22,6 +22,11 @@ class MarketImpactEstimation:
     # ....................... #
 
     def __init__(self, version: str = "v0") -> None:
+        assert version in [
+            "v0",
+            "v1",
+        ], "Invalid version. Supported versions are v0 and v1"
+
         self.version = version
 
     # ....................... #
@@ -133,6 +138,8 @@ class MarketImpactEstimation:
         Returns:
             res (Dict[str, Any] | List[Dict[str, Any]]): Estimated slippage across trade sizes for the given exchange(s)
         """
+
+        assert self.version == "v0", "This method is only available in v0"
 
         if isinstance(exchange, list):
             request = MieRequestRawMultiple(
