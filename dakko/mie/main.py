@@ -50,7 +50,9 @@ class MarketImpactEstimation:
         url = f"{self.__api_host}/{self.version}/{endpoint}"
 
         with httpx.Client() as client:  # check concurrent requests
-            response = client.post(url, headers=self._get_headers(), json=data)
+            response = client.post(
+                url, headers=self._get_headers(), json=data, timeout=30
+            )
             response.raise_for_status()
 
             return response.json()
