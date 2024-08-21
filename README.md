@@ -81,20 +81,36 @@ The Market Impact Estimation (MIE) service provides tools for estimating the mar
 
 ```python
 mie.get_optimal_trade_size(
-    exchange=["kraken", "binance"], # a single exchange or a list of exchanges
+    exchanges=["kraken", "binance"], # a list of exchanges or wildcard, i.e. "*" or "all"
     base_asset="eth",
-    trade_size=100000,
+    trade_size=1_000_000,
+    is_sell=True,
+    max_abs_slippage_bps=5,
 )
 ```
 
-The MIE supports slippage estimation across different trade sizes. In this case using `steps` argument we build linear space with `start = 1000 USD` and `end = trade_size USD` points to build 2D distribution of slippage vs trade size:
+In this case slippage threshold is a target value, so model will try to identify the best trade size for a given criteria. The MIE supports slippage estimation across different trade sizes. In this case using `steps` argument we build linear space with `start = 1000 USD` and `end = trade_size USD` points to build 2D distribution of slippage vs trade size:
 
 ```python
 mie.estimate_slippage_across_sizes(
-    exchange="binance", # a single exchange or a list of exchanges
+    exchanges="*", # wildcard is used
     base_asset="sol",
-    trade_size=100000,
+    trade_size=100_000,
     steps=5,
+    is_sell=False,
+    max_abs_slippage_bps=5,
+)
+```
+
+To get estimation of a given trade size allocation across exchanges you can use the following method:
+
+```python
+mie.estimate_trade_allocation(
+    exchanges="*", # wildcard
+    base_asset="eth",
+    quote_asset="usdt",
+    trade_size=10_000_000,
+    is_sell=True,
 )
 ```
 
@@ -105,19 +121,21 @@ The MIE supports baseline backtesting capabilities with 30 days back window. To 
 ```python
 # example with ts
 mie.get_optimal_trade_size(
-    exchange=["kraken", "mexc", "coinbase"],
+    exchanges=["kraken", "mexc", "coinbase"],
     base_asset="sol",
-    quote_asset="usdt"
-    trade_size=222111,
+    quote_asset="usdt",
+    is_sell=True,
+    trade_size=10_000_000,
     ts=1721440800 # corresponds to 2024-07-20T05:00:00Z
 )
 
 # example with isodate
 mie.get_optimal_trade_size(
-    exchange=["mexc", "coinbase"],
+    exchanges=["mexc", "coinbase"],
     base_asset="btc",
-    quote_asset="usdt"
-    trade_size=123456,
+    quote_asset="usdt",
+    is_sell=True,
+    trade_size=10_000_000,
     isodate="2024-07-20T05:00:00Z"
     ts=123 # will be ignored
 )
@@ -127,21 +145,14 @@ The backtesting mode is also supported for slippage estimation across trade size
 
 ```python
 mie.estimate_slippage_across_sizes(
-    exchange="coinbase",
+    exchanges=["coinbase"],
     base_asset="eth",
-    quote_asset="usd"
-    trade_size=100000,
+    quote_asset="usd",
+    is_sell=True,
+    trade_size=10_000_000,
     steps=10,
     ts=1721440800 # corresponds to 2024-07-20T05:00:00Z
 )
-```
-
-### Improved version of the model
-
-To use next version of the model, choose a version during initialization:
-
-```python
-mie = MarketImpactEstimation(version="v1")
 ```
 
 We gonna add support for wider versioning and model metrics access (based on benchmarks over historical data) to enhance results and user experience.

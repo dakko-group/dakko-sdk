@@ -1,13 +1,14 @@
+from enum import StrEnum
 from typing import List, Optional
 
 from pydantic import Field
 
-from dakko.base import BaseModelEnum, ExtendedEnum
+from dakko.base import Base, ExtendedEnum
 
 # ----------------------- #
 
 
-class Exchange(ExtendedEnum):
+class Exchange(StrEnum, ExtendedEnum):
     krkn = "kraken"
     bnce = "binance"
     bfnx = "bitfinex"
@@ -21,7 +22,7 @@ class Exchange(ExtendedEnum):
 # ....................... #
 
 
-class BaseAsset(ExtendedEnum):
+class BaseAsset(StrEnum, ExtendedEnum):
     sol = "sol"
     eth = "eth"
     btc = "btc"
@@ -38,7 +39,7 @@ class BaseAsset(ExtendedEnum):
 # ....................... #
 
 
-class QuoteAsset(ExtendedEnum):
+class QuoteAsset(StrEnum, ExtendedEnum):
     usdt = "usdt"
     usd = "usd"
     usdc = "usdc"
@@ -47,121 +48,143 @@ class QuoteAsset(ExtendedEnum):
 # ----------------------- #
 
 
-class MieRequest(BaseModelEnum):
+class MieRequest(Base):
 
-    exchange: Exchange = Field(description="Exchange to estimate slippage for")
-    base: BaseAsset = Field(description="Base asset to trade")
-    trade_size: float = Field(description="Initial size of the trade", ge=1000)
-    sell: bool = Field(description="Whether to sell the base asset")
+    exchange: Exchange = Field(..., description="Exchange to estimate slippage for")
+    base: BaseAsset = Field(..., description="Base asset to trade")
+    trade_size: float = Field(..., description="Initial size of the trade", ge=1000)
+    sell: bool = Field(..., description="Whether to sell the base asset")
     max_abs_slippage_bps: float = Field(
+        1,
         description="Maximum allowed slippage in basis points",
-        default=1,
     )
     quote: QuoteAsset = Field(
-        description="Quote asset to trade against", default=QuoteAsset.usdt
+        QuoteAsset.usdt,
+        description="Quote asset to trade against",
     )
-    ts: Optional[int] = Field(description="Timestamp for estimation", default=None)
-    isodate: Optional[str] = Field(description="Datetime (ISO format)", default=None)
+    ts: Optional[int] = Field(None, description="Timestamp for estimation")
+    isodate: Optional[str] = Field(None, description="Datetime (ISO format)")
 
 
 # ....................... #
 
 
-class MieRequestRaw(BaseModelEnum):
+class MieRequestRaw(Base):
 
-    exchange: Exchange = Field(description="Exchange to estimate slippage for")
-    base: BaseAsset = Field(description="Base asset to trade")
-    trade_size: float = Field(description="Initial size of the trade", ge=1000)
-    sell: bool = Field(description="Whether to sell the base asset")
+    exchange: Exchange = Field(..., description="Exchange to estimate slippage for")
+    base: BaseAsset = Field(..., description="Base asset to trade")
+    trade_size: float = Field(..., description="Initial size of the trade", ge=1000)
+    sell: bool = Field(..., description="Whether to sell the base asset")
     steps: int = Field(
+        100,
         description="Number of steps to estimate slippage across sizes",
-        default=100,
         ge=5,
         le=200,
     )
     quote: QuoteAsset = Field(
-        description="Quote asset to trade against", default=QuoteAsset.usdt
+        QuoteAsset.usdt,
+        description="Quote asset to trade against",
     )
-    ts: Optional[int] = Field(description="Timestamp for estimation", default=None)
-    isodate: Optional[str] = Field(description="Datetime (ISO format)", default=None)
+    ts: Optional[int] = Field(None, description="Timestamp for estimation")
+    isodate: Optional[str] = Field(None, description="Datetime (ISO format)")
 
 
 # ....................... #
 
 
-class MieRequestMultiple(BaseModelEnum):
+class MieRequestMultiple(Base):
 
-    exchange: List[Exchange] = Field(description="Exchanges to estimate slippage for")
-    base: BaseAsset = Field(description="Base asset to trade")
-    trade_size: float = Field(description="Initial size of the trade", ge=1000)
-    sell: bool = Field(description="Whether to sell the base asset")
+    exchange: List[Exchange] = Field(
+        ...,
+        description="Exchanges to estimate slippage for",
+    )
+    base: BaseAsset = Field(..., description="Base asset to trade")
+    trade_size: float = Field(..., description="Initial size of the trade", ge=1000)
+    sell: bool = Field(..., description="Whether to sell the base asset")
     max_abs_slippage_bps: float = Field(
+        1,
         description="Maximum allowed slippage in basis points",
-        default=1,
     )
     quote: QuoteAsset = Field(
-        description="Quote asset to trade against", default=QuoteAsset.usdt
+        QuoteAsset.usdt,
+        description="Quote asset to trade against",
     )
-    ts: Optional[int] = Field(description="Timestamp for estimation", default=None)
-    isodate: Optional[str] = Field(description="Datetime (ISO format)", default=None)
+    ts: Optional[int] = Field(None, description="Timestamp for estimation")
+    isodate: Optional[str] = Field(None, description="Datetime (ISO format)")
 
 
 # ....................... #
 
 
-class MieRequestRawMultiple(BaseModelEnum):
+class MieRequestRawMultiple(Base):
 
-    exchange: List[Exchange] = Field(description="Exchanges to estimate slippage for")
-    base: BaseAsset = Field(description="Base asset to trade")
-    trade_size: float = Field(description="Initial size of the trade", ge=1000)
-    sell: bool = Field(description="Whether to sell the base asset")
+    exchange: List[Exchange] = Field(
+        ..., description="Exchanges to estimate slippage for"
+    )
+    base: BaseAsset = Field(..., description="Base asset to trade")
+    trade_size: float = Field(..., description="Initial size of the trade", ge=1000)
+    sell: bool = Field(..., description="Whether to sell the base asset")
     steps: int = Field(
+        100,
         description="Number of steps to estimate slippage across sizes",
-        default=100,
         ge=5,
         le=200,
     )
     quote: QuoteAsset = Field(
-        description="Quote asset to trade against", default=QuoteAsset.usdt
+        QuoteAsset.usdt,
+        description="Quote asset to trade against",
     )
-    ts: Optional[int] = Field(description="Timestamp for estimation", default=None)
-    isodate: Optional[str] = Field(description="Datetime (ISO format)", default=None)
+    ts: Optional[int] = Field(None, description="Timestamp for estimation")
+    isodate: Optional[str] = Field(None, description="Datetime (ISO format)")
 
 
 # ....................... #
 
 
-class MieResponse(BaseModelEnum):
+class MieResponse(Base):
 
-    exchange: Exchange = Field(description="Exchange for which slippage was estimated")
-    base: BaseAsset = Field(description="Base asset to trade")
-    quote: QuoteAsset = Field(description="Quote asset to trade against")
-    optimal_size: float = Field(description="Optimal trade size")
-    current_price: float = Field(description="Current price of the base asset")
-    estimated_slippage: float = Field(description="Estimated slippage in basis points")
-    ts: Optional[int | float] = Field(description="Timestamp", default=None)
-    isodate: Optional[str] = Field(description="Datetime (ISO format)", default=None)
-
-
-# ....................... #
-
-
-class MieResponseRawEntry(BaseModelEnum):
-    size: float = Field(description="Trade size")
-    estimated_slippage: float = Field(description="Estimated slippage in basis points")
+    exchange: Exchange = Field(
+        ...,
+        description="Exchange for which slippage was estimated",
+    )
+    base: BaseAsset = Field(..., description="Base asset to trade")
+    quote: QuoteAsset = Field(..., description="Quote asset to trade against")
+    optimal_size: float = Field(..., description="Optimal trade size")
+    current_price: float = Field(..., description="Current price of the base asset")
+    estimated_slippage: float = Field(
+        ...,
+        description="Estimated slippage in basis points",
+    )
+    ts: Optional[int | float] = Field(None, description="Timestamp")
+    isodate: Optional[str] = Field(None, description="Datetime (ISO format)")
 
 
 # ....................... #
 
 
-class MieResponseRaw(BaseModelEnum):
+class MieResponseRawEntry(Base):
+    size: float = Field(..., description="Trade size")
+    estimated_slippage: float = Field(
+        ...,
+        description="Estimated slippage in basis points",
+    )
 
-    exchange: Exchange = Field(description="Exchange for which slippage was estimated")
-    base: BaseAsset = Field(description="Base asset to trade")
-    quote: QuoteAsset = Field(description="Quote asset to trade against")
-    current_price: float = Field(description="Current price of the base asset")
+
+# ....................... #
+
+
+class MieResponseRaw(Base):
+
+    exchange: Exchange = Field(
+        ...,
+        description="Exchange for which slippage was estimated",
+    )
+    base: BaseAsset = Field(..., description="Base asset to trade")
+    quote: QuoteAsset = Field(..., description="Quote asset to trade against")
+    current_price: float = Field(..., description="Current price of the base asset")
     raw: List[MieResponseRawEntry] = Field(
-        description="Estimated slippage across trade sizes"
+        ...,
+        description="Estimated slippage across trade sizes",
     )
-    ts: Optional[int | float] = Field(description="Timestamp", default=None)
-    isodate: Optional[str] = Field(description="Datetime (ISO format)", default=None)
+    ts: Optional[int | float] = Field(None, description="Timestamp")
+    isodate: Optional[str] = Field(None, description="Datetime (ISO format)")
