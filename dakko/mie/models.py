@@ -1,4 +1,3 @@
-from enum import StrEnum
 from typing import List, Optional
 
 from pydantic import Field
@@ -8,7 +7,7 @@ from dakko.base import Base, ExtendedEnum
 # ----------------------- #
 
 
-class Exchange(StrEnum, ExtendedEnum):
+class Exchange(str, ExtendedEnum):
     krkn = "kraken"
     bnce = "binance"
     bfnx = "bitfinex"
@@ -22,7 +21,7 @@ class Exchange(StrEnum, ExtendedEnum):
 # ....................... #
 
 
-class BaseAsset(StrEnum, ExtendedEnum):
+class BaseAsset(str, ExtendedEnum):
     sol = "sol"
     eth = "eth"
     btc = "btc"
@@ -39,7 +38,7 @@ class BaseAsset(StrEnum, ExtendedEnum):
 # ....................... #
 
 
-class QuoteAsset(StrEnum, ExtendedEnum):
+class QuoteAsset(str, ExtendedEnum):
     usdt = "usdt"
     usd = "usd"
     usdc = "usdc"
